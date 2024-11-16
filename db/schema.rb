@@ -20,6 +20,6 @@ ActiveRecord::Schema[7.1].define(version: 20_241_114_005_235) do
     t.string 'apelido'
     t.string 'nome'
     t.date 'nascimento'
-    t.string 'stack', array: true
+    t.text 'stack', array: true
   end
 end

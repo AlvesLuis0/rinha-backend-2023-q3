@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class PessoasController < ApplicationController
-  before_action :set_pessoa, only: %i[show update destroy]
+  before_action :validate_pessoa_params, only: %i[create]
+  before_action :set_pessoa, only: %i[show]
 
   # GET /pessoas
   def index
@@ -22,22 +23,8 @@ class PessoasController < ApplicationController
     if @pessoa.save
       render json: @pessoa, status: :created, location: @pessoa
     else
-      render json: @pessoa.errors, status: :unprocessable_entity
+      head :unprocessable_entity
     end
-  end
-
-  # PATCH/PUT /pessoas/1
-  def update
-    if @pessoa.update(pessoa_params)
-      render json: @pessoa
-    else
-      render json: @pessoa.errors, status: :unprocessable_entity
-    end
-  end
-
-  # DELETE /pessoas/1
-  def destroy
-    @pessoa.destroy!
   end
 
   private
@@ -49,6 +36,17 @@ class PessoasController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def pessoa_params
-    params.require(:pessoa).permit(:apelido, :nome, :nascimento, :stack)
+    params.require(:pessoa).permit(:apelido, :nome, :nascimento, stack: [])
+  end
+
+  def validate_pessoa_params
+    pessoa = pessoa_params
+    head :bad_request unless [pessoa[:apelido], pessoa[:nome]].all? { |item| item.is_a? String }
+    head :bad_request unless pessoa[:stack].nil? || pessoa[:stack]&.all? { |item| item.is_a? String }
+    begin
+      Date.parse pessoa[:nascimento]
+    rescue StandardError
+      head :bad_request
+    end
   end
 end

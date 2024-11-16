@@ -25,18 +25,4 @@ class PessoasControllerTest < ActionDispatch::IntegrationTest
     get pessoa_url(@pessoa), as: :json
     assert_response :success
   end
-
-  test 'should update pessoa' do
-    patch pessoa_url(@pessoa),
-          params: { pessoa: { apelido: @pessoa.apelido, nascimento: @pessoa.nascimento, nome: @pessoa.nome, stack: @pessoa.stack } }, as: :json
-    assert_response :success
-  end
-
-  test 'should destroy pessoa' do
-    assert_difference('Pessoa.count', -1) do
-      delete pessoa_url(@pessoa), as: :json
-    end
-
-    assert_response :no_content
-  end
 end
