@@ -3,7 +3,7 @@ services:
     build: .
     environment:
       PORT: 3000
-      RAILS_ENV: development
+      RAILS_MASTER_KEY: 0a47eb3d8b30a6c622ff66fd67d4d054
     hostname: api1
     depends_on:
       - db
@@ -19,7 +19,7 @@ services:
     hostname: api2
     environment:
       PORT: 3001
-      RAILS_ENV: development
+      RAILS_MASTER_KEY: 0a47eb3d8b30a6c622ff66fd67d4d054
 
   nginx:
     image: nginx
