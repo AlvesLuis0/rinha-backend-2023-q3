@@ -9,9 +9,9 @@ class Pessoa < ApplicationRecord
   validates :nome, length: { maximum: 100 }
   validate :validate_stack
 
-  scope :search, lambda { |term|
+  def self.search(term)
     where('pesquisa ILIKE ?', "%#{term}%")
-  }
+  end
 
   private
 
