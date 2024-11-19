@@ -1,27 +1,33 @@
 # frozen_string_literal: true
 
 class PessoasController < ApplicationController
+  JSON_FIELDS_EXCEPT = [:pesquisa].freeze
+  PESSOAS_LIMIT = 50
+
   before_action :validate_pessoa_params, only: %i[create]
   before_action :set_pessoa, only: %i[show]
 
   # GET /pessoas
   def index
-    @pessoas = Pessoa.all
-
-    render json: @pessoas
+    term = params[:t]
+    if term.present?
+      @pessoas = Pessoa.search(params[:t]).limit(PESSOAS_LIMIT)
+      render json: @pessoas, except: JSON_FIELDS_EXCEPT
+    else
+      head :bad_request
+    end
   end
 
   # GET /pessoas/1
   def show
-    render json: @pessoa
+    render json: @pessoa, except: JSON_FIELDS_EXCEPT
   end
 
   # POST /pessoas
   def create
     @pessoa = Pessoa.new(pessoa_params)
-
     if @pessoa.save
-      render json: @pessoa, status: :created, location: @pessoa
+      render json: @pessoa, except: JSON_FIELDS_EXCEPT, status: :created, location: @pessoa
     else
       head :unprocessable_entity
     end

@@ -12,7 +12,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 20_241_114_005_235) do
+ActiveRecord::Schema[7.1].define(version: 20_241_119_110_743) do
   # These are extensions that must be enabled in order to support this database
   enable_extension 'plpgsql'
 
@@ -20,6 +20,10 @@ ActiveRecord::Schema[7.1].define(version: 20_241_114_005_235) do
     t.string 'apelido'
     t.string 'nome'
     t.date 'nascimento'
-    t.text 'stack', array: true
+    t.string 'stack', array: true
+    t.virtual 'pesquisa', type: :text, as: '(((apelido)::text || (nome)::text) || (stack)::text[])', stored: true
+    t.index ['apelido'], name: 'index_pessoas_on_apelido'
+    t.index ['id'], name: 'index_pessoas_on_id'
+    t.index ['pesquisa'], name: 'index_pessoas_on_pesquisa'
   end
 end
