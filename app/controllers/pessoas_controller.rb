@@ -11,7 +11,7 @@ class PessoasController < ApplicationController
   def index
     term = params[:t]
     if term.present?
-      @pessoas = Pessoa.search(params[:t]).limit(PESSOAS_LIMIT)
+      @pessoas = Pessoa.search(term).limit(PESSOAS_LIMIT)
       render json: @pessoas, except: JSON_FIELDS_EXCEPT
     else
       head :bad_request
@@ -27,7 +27,7 @@ class PessoasController < ApplicationController
   def create
     @pessoa = Pessoa.new(pessoa_params)
     if @pessoa.save
-      render json: @pessoa, except: JSON_FIELDS_EXCEPT, status: :created, location: @pessoa
+      head :created, location: @pessoa
     else
       head :unprocessable_entity
     end
